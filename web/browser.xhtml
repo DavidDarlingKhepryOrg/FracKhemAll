@@ -1,0 +1,452 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>FracKhemAll-Browser</title>
+            </f:facet>
+            <style type="text/css">
+                .borderless {
+                    border: 0;
+                }
+                .ct50 {
+                    width: 50%;
+                    text-align: center;
+                }
+                .gmapStyle {
+                    height: 600px;
+                    width: 800px;
+                }
+                .ctAlignLabel {
+                    text-align: center;
+                    font-weight: bold;
+                }
+                .ltAlignLabel {
+                    text-align: left;
+                    font-weight: bold;
+                }
+                .rtAlignLabel {
+                    text-align: right;
+                    font-weight: bold;
+                }
+                .ctAlignNormal {
+                    text-align: center;
+                    font-weight: normal;
+                }
+                .ltAlignNormal {
+                    text-align: left;
+                    font-weight: normal;
+                }
+                .rtAlignNormal {
+                    text-align: right;
+                    font-weight: normal;
+                }
+                .resultsMessageNormal {
+                    text-align: center;
+                    color: green;
+                }
+                .resultsMessageError {
+                    text-align: center;
+                    color: red;
+                }
+            </style>
+        </h:head>
+
+        <h:body>
+            <h:form id="frmMain">
+
+                <p:layout fullPage="true">
+
+                    <p:layoutUnit id="top" position="north" size="100" header="Hydro-Fracturing (Fracking) Operations Chemical Disclosure Site" collapsible="true">
+                        <p:panelGrid columns="4" columnClasses="rtAlignLabel,ltAlignNormal">
+                            <h:outputLabel value="Theme: " />
+                            <p:themeSwitcher>
+                                <f:selectItem itemLabel="Choose Theme" itemValue="" />
+                                <f:selectItems value="#{disclosureBeanHandler.autoCompleteBean.themes}" />
+                            </p:themeSwitcher>
+                            <h:outputLabel value="NOTE: With the exception of Toxicities, which are ORed by default, all other selection criteria are ANDed. For example, if you choose the State of 'Arkansas' then only the counties in 'Arkansas' will be present in the County dropdown box." style='font-style: italic; font-size: small;' /> 
+                        </p:panelGrid>
+                        <!--
+                        <p:panelGrid columns="2" columnClasses="rtAlignLabel,ltAlignNormal">
+                            <h:outputLabel value="Host IP Address: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.hostIpAddress}" />
+                            <h:outputLabel value="Client IP Address: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.clientIpAddress}" />
+                            <h:outputLabel value="JDBC Driver Name: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.jdbcDriverName}" />
+                            <h:outputLabel value="JDBC Connection String: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.jdbcConnString}" />
+                            <h:outputLabel value="JDBC UID: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.jdbcUID}" />
+                            <h:outputLabel value="JDBC PWD: " />
+                            <h:outputText value="#{disclosureBeanHandler.settingsSessionBean.jdbcPWD}" />
+                        </p:panelGrid>
+                        -->
+                    </p:layoutUnit>
+
+                    <p:layoutUnit id="bottom" position="south" size="60" header="copyright &copy; 2013 by &lt;a href='http://www.khepry.com' target='_blank' style='font-family: Papyrus; font-weight: bold; color: blue;'&gt;Khepry Software&lt;/a&gt;" >
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" size="225" header="Links" collapsible="true">
+                        <p:menu style="width: 95%;">
+                            <p:submenu label="Resources">
+                                <p:menuitem value="FracFocus.org Website" url="http://www.fracfocus.org" target="_blank" />
+                                <p:menuitem value="SkyTruth Fracking Data" url="http://frack.skytruth.org/fracking-chemical-database" target="_blank" />
+                                <p:menuitem value="Fracking Analysis Data" url="https://code.google.com/p/fracking-analysis/downloads/list" target="_blank" />
+                                <p:menuitem value="Health Effects Data" url="http://scorecard.goodguide.com/health-effects/" target="_blank" />
+                            </p:submenu>
+                            <p:submenu label="Blogs">
+                                <p:menuitem value="SkyTruth Blog" url="http://blog.skytruth.org" target="_blank" />
+                                <p:menuitem value="Fracking Wall" url="http://frackingwall.wordpress.com" target="_blank" />
+                                <p:menuitem value="Fracking Analysis" url="http://frackinginfoanalysis.wordpress.com" target="_blank" />
+                                <p:menuitem value="Fracking Data" url="http://frackingdata.org" />
+                            </p:submenu>
+                            <p:submenu label="PrimeFaces">
+                                <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" target="_blank" />
+                                <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" target="_blank" />
+                                <p:menuitem value="Forum" url="http://forum.primefaces.org/" target="_blank" />
+                                <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" target="_blank" />
+                            </p:submenu>
+                        </p:menu>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center">
+                        <p:outputPanel id='opSearchByReport' style='height: fit-content; vertical-align: top;'>
+                            <p:panelGrid id="dgSearchByReport">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="6">
+                                            Hydro-Fracture Well Chemical Disclosures Search Criteria
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="1">
+                                            API
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            State
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            County
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            Operator
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            Well Name
+                                        </p:column>
+                                        <p:column colspan="1">
+                                            CAS Ref Number
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddAPI" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenAPI}"  
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseAPI}" size="25" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleAPISelect}" />
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddState" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenState}"    
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseState}" size="30" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleStateSelect}" update="ddCounty"/>
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddCounty" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenCounty}"   
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseCounty}" size="30" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleCountySelect}" />
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddOperator" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenOperator}"   
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseOperator}" size="30" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleOperatorSelect}" />
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddWellName" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenWellName}"   
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseWellName}" size="30" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleWellNameSelect}" />
+                                        </p:autoComplete>
+                                    </p:column>
+                                    <p:column colspan="1" style="white-space: nowrap;">
+                                        <p:autoComplete id="ddCasNumber" dropdown="true" value="#{disclosureBeanHandler.autoCompleteBean.chosenCasNumber}"   
+                                                        completeMethod="#{disclosureBeanHandler.autoCompleteBean.chooseCasNumber}" size="30" maxResults="#{disclosureBeanHandler.autoCompleteBean.maxResults}" >
+                                            <p:ajax event="itemSelect" listener="#{disclosureBeanHandler.autoCompleteBean.handleCasNumberSelect}" />
+                                        </p:autoComplete>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                        <p:outputPanel id='opSearchByToxicity' style="height: fit-content;">
+                            <p:panelGrid style="text-align: center;">
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="14" style='font-style: italic;'>
+                                            Toxicities Associated with Disclosed Chemicals (Source: <a href='http://scorecard.goodguide.com/health-effects/' target='_blank'>GoodGuide's Scorecard</a>)
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="1">Category</p:column>
+                                        <p:column colspan="1">Any</p:column>
+                                        <p:column colspan="1">Cancer</p:column>
+                                        <p:column colspan="1">Cardio-<br/>Blood</p:column>
+                                        <p:column colspan="1">Develop-<br/>mental</p:column>
+                                        <p:column colspan="1">Endo-<br/>crine</p:column>
+                                        <p:column colspan="1">Gastro-<br/>Liver</p:column>
+                                        <p:column colspan="1">Immuno-<br/>logical</p:column>
+                                        <p:column colspan="1">Kidney</p:column>
+                                        <p:column colspan="1">Musculo-<br/>skeletal</p:column>
+                                        <p:column colspan="1">Neuro-<br/>logical</p:column>
+                                        <p:column colspan="1">Repro-<br/>ductive</p:column>
+                                        <p:column colspan="1">Respiratory</p:column>
+                                        <p:column colspan="1">Skin-<br/>Sense</p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column colspan="1" styleClass="ctAlignLabel">Recognized</p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognized" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognized}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognized}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedCancer" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedCancer}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedCancer}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedCardioBlood" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedCardioBlood}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedCardioBlood}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedDevelopmental" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedDevelopmental}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedDevelopmental}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedEndocrine" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedEndocrine}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedEndocrine}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedGastroLiver" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedGastroLiver}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedGastroLiver}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedImmunotoxicity" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedImmunotoxicity}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedImmunotoxicity}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedKidney" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedKidney}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedKidney}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedMusculoskeletal" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedMusculoskeletal}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedMusculoskeletal}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedNeurotoxicity" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedNeurotoxicity}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedNeurotoxicity}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedReproductive" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedReproductive}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedReproductive}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedRespiratory" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedRespiratory}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedRespiratory}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddRecognizedSkinSense" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicityRecognizedSkinSense}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicityRecognizedSkinSense}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="1" styleClass="ctAlignLabel">Suspected</p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspected" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspected}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspected}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedCancer" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedCancer}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedCancer}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedCardioBlood" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedCardioBlood}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedCardioBlood}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedDevelopmental" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedDevelopmental}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedDevelopmental}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedEndocrine" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedEndocrine}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedEndocrine}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedGastroLiver" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedGastroLiver}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedGastroLiver}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedImmunotoxicity" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedImmunotoxicity}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedImmunotoxicity}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedKidney" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedKidney}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedKidney}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedMusculoskeletal" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedMusculoskeletal}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedMusculoskeletal}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedNeurotoxicity" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedNeurotoxicity}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedNeurotoxicity}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedReproductive" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedReproductive}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedReproductive}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedRespiratory" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedRespiratory}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedRespiratory}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                    <p:column colspan="1">
+                                        <p:selectBooleanCheckbox id="ddSuspectedSkinSense" value="#{disclosureBeanHandler.autoCompleteBean.chosenRptToxicitySuspectedSkinSense}" valueChangeListener="#{disclosureBeanHandler.autoCompleteBean.handleToxicitySuspectedSkinSense}">
+                                            <p:ajax process="@this"/>
+                                        </p:selectBooleanCheckbox>
+                                    </p:column>
+                                </p:row>    
+                            </p:panelGrid>
+                        </p:outputPanel>
+                        <p:outputPanel>
+                            <p:panelGrid columns="2" columnClasses="rtAlignLabel,ltAlignNormal" style="width: 100%; text-align: center;">
+                                <p:commandButton id="btnSearch4ReportMatches" value="Search for Matches" actionListener="#{disclosureBeanHandler.doSearchList}" process="@this" update="opSearchResults" />
+                                <p:commandButton id="btnClearTheReportFields" value="Clear Search Criteria" actionListener="#{disclosureBeanHandler.clearChosenValues}" process="@this" update="opSearchByReport,opSearchByToxicity,opSearchResults" title="Clear the search criteria values." />
+                            </p:panelGrid>
+                        </p:outputPanel>
+                        <p:outputPanel id="opSearchResults">
+                            <h:outputText id="otSearchResults" value="#{disclosureBeanHandler.queryResult.message}" class="#{disclosureBeanHandler.resultsClass}"/>
+                            <p:dataTable value="#{disclosureBeanHandler.disclosureBeans}" var="report" rows="15" paginator="true" pageLinks="20" >
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="12">
+                                            Hydro-Fracture Well Disclosures Search Results
+                                        </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:column style="width: 2%">
+                                    <p:rowToggler/>
+                                </p:column>
+                                <p:column headerText="API">
+                                    <p:commandLink value='#{report.api}' actionListener="#{disclosureBeanHandler.doSearchByAPI}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="State">
+                                    <p:commandLink value='#{report.state}' actionListener="#{disclosureBeanHandler.doSearchByState}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="County">
+                                    <p:commandLink value='#{report.county}' actionListener="#{disclosureBeanHandler.doSearchByCounty}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="Operator">
+                                    <p:commandLink value='#{report.operator}' actionListener="#{disclosureBeanHandler.doSearchByOperator}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="Well Name">
+                                    <p:commandLink value='#{report.wellName}' actionListener="#{disclosureBeanHandler.doSearchByWellName}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="Prod Type">
+                                    <p:commandLink value='#{report.prodType}' actionListener="#{disclosureBeanHandler.doSearchByProdType}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="Fracture Date">
+                                    <p:commandLink value='#{report.fractureDate}' actionListener="#{disclosureBeanHandler.doSearchByFractureDate}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="True Vertical Depth" styleClass="rtAlignNormal">
+                                    <h:outputText value="#{report.trueVerticalDepth}"/>
+                                </p:column>
+                                <p:column headerText="Total Water Volume" styleClass="rtAlignNormal">
+                                    <h:outputText value="#{report.totalWaterVolume}"/>
+                                </p:column>
+                                <p:column headerText="PDF Seq ID">
+                                    <p:commandLink value='#{report.pdfSeqId}' actionListener="#{disclosureBeanHandler.doSearchByPdfSeqId}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:column headerText="Published Date">
+                                    <p:commandLink value='#{report.publishedDate}' actionListener="#{disclosureBeanHandler.doSearchByPublishedDate}" ajax="true" process="@this" update=":frmMain:opSearchResults" />
+                                </p:column>
+                                <p:rowExpansion>
+                                    <p:panelGrid>
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <p:dataTable value="#{report.chemicals}" var="chemical">
+                                                    <f:facet name="header">
+                                                        <p:row>
+                                                            <p:column colspan="2">
+                                                                <h:outputText value="Hydro-Fracture Well Chemical Disclosures + Toxicities"/>
+                                                            </p:column>
+                                                        </p:row>
+                                                    </f:facet>
+                                                    <p:column headerText="CASRN" styleClass="ctAlignNormal">
+                                                        <h:outputText value="#{chemical.casNumber}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Trade Name" styleClass="ctAlignNormal">
+                                                        <h:outputText value="#{chemical.tradeName}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Purpose" styleClass="ctAlignNormal">
+                                                        <h:outputText value="#{chemical.purpose}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Ingredients" styleClass="ctAlignNormal">
+                                                        <h:outputText value="#{chemical.ingredients}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Additive Concentration" styleClass="rtAlignNormal">
+                                                        <h:outputText value="#{chemical.additiveConcentration}"/>
+                                                    </p:column>
+                                                    <p:column headerText="HF Fluid Concentration" styleClass="rtAlignNormal">
+                                                        <h:outputText value="#{chemical.hfFluidConcentration}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Toxicity-Recognized" styleClass="ltAlignNormal">
+                                                        <h:outputText value="#{chemical.toxRecognized}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Toxicity-Suspected" styleClass="ltAlignNormal">
+                                                        <h:outputText value="#{chemical.toxSuspected}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                        </p:outputPanel>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
