@@ -81,7 +81,7 @@
             jdbcSQLiteConnString
         </param-name>
         <param-value>
-            jdbc:sqlite:/home/databases/frackhem_sqlite3.db
+            jdbc:sqlite:/home/databases/fracking/frackhem/frackhem_sqlite3.db
         </param-value>
     </context-param>
     <context-param>

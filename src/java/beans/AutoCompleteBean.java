@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package beans;
 
 import java.io.Serializable;
@@ -29,7 +25,7 @@ import org.primefaces.event.SelectEvent;
 
 /**
  *
- * @author David Darling <david.darling@khepry.com>
+ * @author Khepry Quixote <fracking.analysis@gmail.com>
  */
 @ManagedBean
 @ViewScoped
@@ -76,8 +72,8 @@ public class AutoCompleteBean implements Serializable {
     private String keyRow = "chm_row";
     private String keyPublishedDate = "rpt_published";
 
-    private String keyChmToxicityRecognized = "rpt_tox_recognized";
-    private String keyChmToxicitySuspected = "rpt_tox_suspected";
+    private String keyChmToxicityRecognized = "chm_tox_recognized";
+    private String keyChmToxicitySuspected = "chm_tox_suspected";
     private String keyChmToxicityRecognizedCancer = "tox_recognized_cancer";
     private String keyChmToxicitySuspectedCancer = "tox_suspected_cancer";
     private String keyChmToxicityRecognizedCardioBlood = "tox_recognized_cardio_blood";

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package crypto;
 
 import java.io.Serializable;
@@ -16,7 +12,7 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  *
- * @author David Darling <david.darling@khepry.com>
+ * @author Khepry Quixote <fracking.analysis@gmail.com>
  */
 public class PbeEncryption implements Serializable {
     

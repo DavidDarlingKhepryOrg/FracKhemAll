@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package beans;
 
 import crypto.PbeEncryption;
@@ -22,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author David Darling <david.darling@khepry.com>
+ * @author Khepry Quixote <fracking.analysis@gmail.com>
  */
 @ManagedBean
 @SessionScoped

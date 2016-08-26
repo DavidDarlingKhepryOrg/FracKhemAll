@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package beans;
 
 import java.io.Serializable;
@@ -11,7 +7,7 @@ import javax.faces.bean.RequestScoped;
 
 /**
  *
- * @author David Darling <david.darling@khepry.com>
+ * @author Khepry Quixote <fracking.analysis@gmail.com>
  */
 @ManagedBean
 @RequestScoped

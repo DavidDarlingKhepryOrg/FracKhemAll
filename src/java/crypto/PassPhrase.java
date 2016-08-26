@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Cheap, lightweight, low-security password generator. See also: 
  * java.security.*; 
  *
- * @author David Darling <david.darling@khepry.com>
+ * @author Khepry Quixote <fracking.analysis@gmail.com>
  */
 public class PassPhrase implements Serializable {  
     /** 
@@ -50,7 +50,7 @@ public class PassPhrase implements Serializable {
             throw new IllegalArgumentException(  
                     "Ridiculous password length " + length);  
         }  
-        StringBuffer sb = new StringBuffer();  
+        StringBuilder sb = new StringBuilder();  
         for (int i = 0; i < length; i++) {  
             sb.append(goodChar[r.nextInt(goodChar.length)]);  
         }  
